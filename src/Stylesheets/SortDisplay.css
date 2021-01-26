@@ -1,0 +1,135 @@
+.Display-Wrapper {
+
+}
+
+.Sort-Display-Container {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: 95%;
+    background-color: rgba(0, 0, 0, 0.8);
+    margin: 15px;
+    border-radius: 40px;
+}
+
+.Back-Button {
+    position: absolute;
+    top: 70px;
+    left: 40px;
+    background-color: transparent;
+    border: 2px solid black;
+    outline: none;
+    font-size: x-large;
+    cursor: pointer;
+    height: 40px;
+    font-family: 'Cinzel', serif;
+}
+
+.Back-Button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    transition: 0.3s ease-in-out;
+    border: 2px solid white;
+}
+
+.Back-Button:not( :hover ) {
+    background-color: transparent;
+    color: black;
+    transition: 0.3s ease-in-out;
+    border: 2px solid black;
+}
+
+.Display-Title {
+    font-size: xx-large;
+    text-align: center;
+    color: white;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.Display-Flex {
+    display: flex;
+    width: 100%;
+}
+
+.Display-Flex-Side {
+    display: flex;
+    width: 50%;
+}
+
+.Display-Hat-Container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.4);
+    height: 250px;
+    width: 200px;
+    border-radius: 10px;
+}
+
+.Display-Label {
+    font-size: large;
+    text-align: center;
+}
+
+.Display-Hat {
+    position: relative;
+    width: 120px;
+    height: 100px;
+}
+
+.Display-Button-Container {
+    height: 40px;
+    width: 100%;
+    background-color: transparent;
+    margin-top: 20px;
+}
+
+.Display-Buttons {
+    position: relative;
+    height: 40px;
+    width: 100%;
+    background-color: transparent;
+    color: white;
+    text-align: center;
+    font-size: large;
+    font-family: 'Cinzel', serif;
+    outline: none;
+    z-index: 2;
+    border: 2px solid white;
+}
+
+.Behind {
+    position: relative;
+    margin-top: -40px;
+    width: 0;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.Display-Button-Container:hover .Behind{
+    width: 100%;
+    transition: 0.3s ease-in-out;
+}
+.Display-Button-Container:not( :hover ) .Behind{
+    width: 0;
+    transition: 0.3s ease-in-out;
+}
+
+.Display-Button-Container:hover .Display-Buttons {
+    border: 2px solid black;
+    transition: 0.3s ease-in-out;
+}
+.Display-Button-Container:not( :hover ) .Display-Buttons {
+    border: 2px solid white;
+    transition: 0.3s ease-in-out;
+}
+
+.Slider-Label {
+    color: white;
+    margin-bottom: 5px;
+    font-size: large;
+}
+

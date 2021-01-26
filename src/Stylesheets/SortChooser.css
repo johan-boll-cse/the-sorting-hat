@@ -1,0 +1,116 @@
+.Chooser-Wrapper {
+
+}
+
+.House-Button {
+    position: relative;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 127px 250px;
+    background-color: transparent;
+    height: 300px;
+    width: 220px;
+    min-width: 220px;
+    font-size: x-large;
+    font-family: 'Cinzel', serif;
+    font-weight: bold;
+    color: black;
+    outline: none;
+    border: none;
+    border-radius: 40px;
+    padding-bottom: 250px;
+    margin: -10px 10px -30px 10px;
+}
+
+.Hufflepuff {
+    background-image: url("../Pictures/Hufflepuff.png");
+}
+
+.Gryffindor {
+    background-image: url("../Pictures/Gryffindor.png");
+}
+
+.Ravenclaw {
+    background-image: url("../Pictures/Ravenclaw.png");
+}
+
+.Slytherin {
+    background-image: url("../Pictures/Slytherin.png");
+}
+
+.Glow {
+    position: absolute;
+    border-radius: 50%;
+    background-color: transparent;
+    width: 40px;
+    height: 40px;
+    top: 100px;
+}
+
+.Hover-Container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    height: 250px;
+    width: 180px;
+    margin: 5px 20px 0 30px;
+    background-color: transparent;
+}
+
+.Hover-Container:hover .House-Button{
+    background-size: 152px 300px;
+    transition: 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.Hover-Container:hover .Glow {
+    box-shadow: 0 0 80px 80px white;
+    transition: 0.2s ease-in-out;
+}
+
+.Choose-Sort-Description {
+    padding: 15px;
+    margin: 0;
+    overflow-y: scroll;
+}
+
+.Choose-Title {
+    font-size: x-large;
+    text-align: center;
+    color: white;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.Sort-Choose-Container {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: 95%;
+    background-color: rgba(0, 0, 0, 0.8);
+    margin: 15px;
+    border-radius: 40px;
+    overflow-y: hidden;
+    min-width: 1080px;
+}
+
+.Sort-Choose-Container::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.Sort-Container {
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 40px;
+    margin: 10px 20px 10px 20px;
+    width: 100%;
+    min-width: 500px;
+    height: 250px;
+}
+
+.Vert-Divide {
+    border-left: 2px solid black;
+    height: 80%;
+    transform: translate(0, 10%);
+    margin-right: 15px;
+}

@@ -1,0 +1,16 @@
+.Header-Hat {
+    width: 120px;
+}
+
+.Header-Title {
+    margin: 10px;
+    font-size: 60px;
+}
+
+.Header-Divider {
+    display: block;
+    width: 800px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: -20px;
+}

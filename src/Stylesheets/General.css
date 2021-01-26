@@ -1,0 +1,49 @@
+.Flex-Row {
+    display: flex;
+}
+
+.Flex-Col {
+    display: flex;
+    flex-direction: column;
+}
+
+.Flex-Col-Right {
+    display: flex;
+    flex-direction: column;
+    float: right;
+    margin-left: auto;
+}
+
+.Flex-Col-Center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.Flex-Col-Left {
+    display: flex;
+    flex-direction: column;
+    float: left;
+}
+
+.Flex-Row-Center {
+    display: flex;
+    justify-content: center;
+}
+
+.Flex-Row-Full {
+    display: flex;
+    width: 100%;
+}
+
+.Invisible {
+    width: 100%;
+}
+
+.MarginR30 {
+    margin: 0 30px 0 0;
+}
+
+.MarginL30 {
+    margin: 0 0 0 30px;
+}

@@ -1,0 +1,13 @@
+export const SORTS : String[] = ["Selection", "Bubble", "Merge", "Quick"];
+export const HILIGHTS : String[] = ["Index", "", "", "Pivot"];
+export const INIT_COLOR = 'rgb(179,149,0)';    // Dark gold
+export const CUR_COLOR = 'rgb(139,0,0)';       // Dark red
+export const SWAP_COLOR = 'rgb(0,48,143)';     // Dark blue
+export const HI_COLOR = 'rgb(255, 255, 255)'   // White
+export const SORTED_COLOR = 'rgb(0,77,26)';    // Dark green
+export const NUM_BARS = 40;
+export const BAR_HEIGHT = 4;
+export const BAR_WIDTH = 10;
+export const MAX_VAL = 99;
+export const MIN_VAL = 10;
+export const SPEED_MS = 0.5;

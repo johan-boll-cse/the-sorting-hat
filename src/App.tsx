@@ -1,26 +1,55 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react';
+import './Stylesheets/App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Header from "./Components/Header";
+import SortChooser from "./Components/SortChooser";
+import SortDisplay from "./Components/SortDisplay";
+
+interface AppState {
+    // The index of the selected sort
+    sort: number | undefined;
+
+}
+
+// The sorting algorithms in their respective indices
+// const SORTS : String[] = ["Selection", "Bubble", "Merge", "Quick"];
+
+class App extends Component<{}, AppState> {
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            sort: undefined
+        }
+    }
+
+    setSort = (sort : number) => {
+        this.setState({
+            sort: sort
+        })
+    }
+
+    goBack = () => {
+        this.setState({
+            sort: undefined
+        })
+    }
+
+    render() {
+        let display : any[] = [];
+        if (this.state.sort === undefined) {
+            display.push(<SortChooser key={0} onSortClick={(sort : number) => this.setSort(sort)}/>);
+        } else {
+            display.push(<SortDisplay key={1} curSort={this.state.sort} onBackClick={() => this.goBack()}/>);
+        }
+        return (
+            <div className="App-Wrapper">
+                <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet"/>
+                <Header/>
+                {display}
+            </div>
+        )
+    }
+
 }
 
 export default App;

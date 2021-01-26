@@ -1,0 +1,11 @@
+.Bar-Container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 20px 0 20px 0;
+    overflow-x: scroll;
+}
+
+.Bar {
+    text-align: center;
+}
