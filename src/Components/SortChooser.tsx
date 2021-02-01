@@ -4,6 +4,7 @@ import '../Stylesheets/SortChooser.css';
 import '../Stylesheets/General.css'
 
 import * as Utils from '../Utils/Utils';
+import SortProperties from "./SortProperties";
 
 interface ChooserProps {
     onSortClick(sort : number): void;
@@ -31,9 +32,7 @@ class SortChooser extends Component<ChooserProps, {}> {
                                         {buttons[0]}
                                     </div>
                                     <div className="Vert-Divide"/>
-                                    <p className="Choose-Sort-Description">
-                                        Selection sort is an in-place comparison sorting algorithm. It has an O(n<sup>2</sup>) time complexity, which makes it inefficient on large lists, and generally performs worse than the similar bubble sort. Selection sort is noted for its simplicity and has performance advantages over more complicated algorithms in certain situations, particularly where auxiliary memory is limited.
-                                    </p>
+                                    <SortProperties curSort={0}/>
                                 </div>
                                 <div className="Sort-Container">
                                 <div className="Hover-Container">
@@ -41,9 +40,7 @@ class SortChooser extends Component<ChooserProps, {}> {
                                     {buttons[1]}
                                 </div>
                                 <div className="Vert-Divide"/>
-                                <p className="Choose-Sort-Description">
-                                    Bubble sort
-                                </p>
+                                <SortProperties curSort={1}/>
                             </div>
                         </div>
                         <div className="Flex-Row">
@@ -53,9 +50,7 @@ class SortChooser extends Component<ChooserProps, {}> {
                                     {buttons[2]}
                                 </div>
                                 <div className="Vert-Divide"/>
-                                <p className="Choose-Sort-Description">
-                                    Merge Sort
-                                </p>
+                                <SortProperties curSort={2}/>
                             </div>
                             <div className="Sort-Container">
                                 <div className="Hover-Container">
@@ -63,9 +58,7 @@ class SortChooser extends Component<ChooserProps, {}> {
                                     {buttons[3]}
                                 </div>
                                 <div className="Vert-Divide"/>
-                                <p className="Choose-Sort-Description">
-                                    Quick sort
-                                </p>
+                                <SortProperties curSort={3}/>
                             </div>
                         </div>
                     </div>

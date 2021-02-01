@@ -9,16 +9,17 @@ export function swap(a : number, b : number, arr : number[]) : void {
     arr[b] = tmp;
 }
 
-// Sorting algorithms
-// These each take in an array of values as a parameter.
-// They return an array of animations of the form:
-// [[cur : number | undefined, swap : number | undefined, highlight : number | undefined, switch : boolean, final : boolean], ...]
-//      cur = the current indices the algorithm is looking at and storing.
-//      swap = the index the algorithm will be swapping with.
-//      highlight = an important index the algorithm is holding (current position for selection, pivot for quick).
-//      switch = whether or not the values at current and swap should be swapped.
-//      final = whether or not the value that was swapped is in its final sorted position.
-// These animations can be used to simulate the sorting the array.
+/** Sorting algorithms
+These each take in an array of values as a parameter.
+They return an array of animations of the form:
+[[cur : number | undefined, swap : number | undefined, highlight : number | undefined, switch : boolean, final : boolean], ...]
+      cur = the current indices the algorithm is looking at and storing.
+      swap = the index the algorithm will be swapping with.
+      highlight = an important index the algorithm is holding (current position for selection, pivot for quick).
+      switch = whether or not the values at current and swap should be swapped.
+      final = whether or not the value that was swapped is in its final sorted position.
+ These animations can be used to simulate the sorting the array.
+ **/
 export function selectionSort(vals : number[]) : any[] {
     let array = vals.slice();
     let animations : any[] = [];
@@ -48,4 +49,106 @@ export function selectionSort(vals : number[]) : any[] {
         }
     }
     return animations;
+}
+
+export function bubbleSort(vals: number[]) : any[] {
+    let array = vals.slice();
+    let animations : any[] = [];
+    for (let i = 0; i < array.length; i++) {
+        for (let j = 1; j < array.length - i; j++) {
+            if (array[j - 1] > array[j]) {
+                animations.push({cur: j - 1, swap: j, highlight: undefined, switch : true, final: false})
+                swap(j - 1, j, array);
+            } else {
+                animations.push({cur: j - 1, swap: undefined, highlight: j, switch : false, final: false})
+            }
+            if (j === array.length - i - 1) {
+                animations.push({cur: j, swap: undefined, highlight: undefined, switch : false, final: true})
+            }
+        }
+    }
+    animations.push({cur: 0, swap: undefined, highlight: undefined, switch : false, final: true})
+    return animations;
+
+}
+
+export function quickSort(vals: number[]) : any[] {
+    let array = vals.slice();
+    console.log(array);
+    let animations : any[] = [];
+
+    return animations;
+
+}
+
+/**
+Merge sort will be unique because of the additional array storage needed.
+Animations will be changed to contain:
+ [[arrIndex : number, leftIndex : number, leftMax : number, rightIndex : number, rightMax : number, leftInsert : boolean, final: boolean], ...]
+    arrIndex = the current index the algorithm is swapping values into.
+    leftIndex = the current index the algorithm is at for the left array.
+    leftMax = the index of the end of the left array.
+    rightIndex = the current index the algorithm is at for the right array.
+    rightMax = the index of the end of the right array.
+    leftSwap - true if the algorithm will insert the value at leftIndex into arrIndex, false if the algorithm will insert the value at rightIndex into arrIndex.
+    final = whether or not the value that was swapped is in its final sorted position.
+ **/
+
+export function mergeSort(vals: number[]) : any[] {
+    let array = vals.slice();
+    let animations : any[] = [];
+    divide(array, 0, array.length - 1, animations);
+    return animations;
+}
+
+function divide(arr: number[], start : number, end : number, animations : any[]) {
+    if (end <= start) {
+        return;
+    }
+    const mid = start + Math.floor((end - start) / 2);
+    divide(arr, start, mid, animations);
+    divide(arr, mid + 1, end, animations);
+    merge(arr, start, mid, end, animations);
+}
+
+function merge(arr : number[], start : number, mid : number, end : number, animations : any[]) : void {
+    const left = mid - start + 1;
+    const right = end - mid;
+    let leftArray : number[] = [];
+    let rightArray : number[] = [];
+
+    for (let i = 0; i < left; i++) {
+        leftArray[i] = arr[start + i];
+    }
+    for (let i = 0; i < right; i++) {
+        rightArray[i] = arr[mid + 1 + i];
+    }
+
+    let leftIndex = 0;
+    let rightIndex = 0;
+    let arrIndex = start;
+    while ( leftIndex < left && rightIndex < right) {
+        if (leftArray[leftIndex] < rightArray[rightIndex]) {
+            arr[arrIndex] = leftArray[leftIndex];
+            animations.push({arrIndex: arrIndex, leftIndex: start + leftIndex, leftMax: mid, rightIndex: mid + 1 + rightIndex, rightMax: end, leftSwap: true, final: (end === arr.length - 1 && mid === Math.floor((arr.length - 1) / 2))});
+            leftIndex++;
+        } else {
+            arr[arrIndex] = rightArray[rightIndex];
+            animations.push({arrIndex: arrIndex, leftIndex: start + leftIndex, leftMax: mid, rightIndex: mid + 1 + rightIndex, rightMax: end, leftSwap: false, final: (end === arr.length - 1 && mid === Math.floor((arr.length - 1) / 2))});
+            rightIndex++;
+        }
+        arrIndex++;
+    }
+    while (leftIndex < left) {
+        arr[arrIndex] = leftArray[leftIndex];
+        animations.push({arrIndex: arrIndex, leftIndex: start + leftIndex, leftMax: mid, rightIndex: mid + 1 + rightIndex, rightMax: end, leftSwap: true, final: (end === arr.length - 1 && mid === Math.floor((arr.length - 1) / 2))});
+        leftIndex++;
+        arrIndex++;
+    }
+    while (rightIndex < right) {
+        arr[arrIndex] = rightArray[rightIndex];
+        animations.push({arrIndex: arrIndex, leftIndex: start + leftIndex, leftMax: mid, rightIndex: mid + 1 + rightIndex, rightMax: end, leftSwap: false, final: (end === arr.length - 1 && mid === Math.floor((arr.length - 1) / 2))});
+        rightIndex++;
+        arrIndex++;
+    }
 }

@@ -31,9 +31,9 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
     constructor(props: DisplayProps) {
         super(props);
         this.state = {
-            vals: this.generateVals(40),
-            numBars: 40,
-            speedMS: 10,
+            vals: this.generateVals(Utils.DEFAULT_NUM_BARS),
+            numBars: Utils.DEFAULT_NUM_BARS,
+            speedMS: Utils.DEFAULT_SPEED,
             sorting: false
         }
     }
@@ -94,28 +94,130 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
 
     sortArray = () : void => {
         let animations : any[] = [];
+        let swapCoef : number = 1;
+        this.clearTimeouts();
         let arr = this.state.vals.slice();
         if (this.props.curSort === 0) {
             animations = SortFunctions.selectionSort(arr);
+            swapCoef = 5;
+        } else if (this.props.curSort === 1) {
+            animations = SortFunctions.bubbleSort(arr);
+        } else if (this.props.curSort === 2) {
+            animations = SortFunctions.mergeSort(arr);
+            this.resetBarColor();
+            this.animateSortMerge(arr, animations);
+            this.setState({
+                vals: arr,
+                sorting: true
+            });
+            return;
+        } else if (this.props.curSort === 3) {
+            animations = SortFunctions.quickSort(arr);
         }
-        this.clearTimeouts();
         this.resetBarColor();
         if (animations.length === 0) {
             console.log("No Animations");
             arr.sort();
         } else {
-            this.animateSort(arr, animations);
+            this.animateSort(arr, animations, swapCoef);
         }
         this.setState({
             vals: arr,
             sorting: true
-        })
+        });
     }
 
-    animateSort = (arr : number[], animations : any[]) : void => {
+    // TODO: Make the left and right array colors move over after the array shifts
+
+    animateSortMerge = (arr : number[], animations : any[]) : void => {
         const docBars = document.getElementsByClassName('Bar');
-        let swapTime = 0;
-        const speed = this.state.speedMS;
+        let swapTime = 0.0;
+        // console.log(animations);
+        // console.log(arr);
+        let shift = 0;
+        let pastLeftMax = 0;
+        const speed = Utils.SPEED_NUMBERS[this.state.speedMS - 1];
+        for (let i = 0; i < animations.length; i++) {
+            const curAnim = animations[i];
+            const firstLeftMax = curAnim['leftMax'];
+            if (pastLeftMax !== firstLeftMax) {
+                // console.log("Reseting shift");
+                shift = 0;
+                pastLeftMax = firstLeftMax;
+            }
+            const leftMax = firstLeftMax + shift;
+            const arrIndex = curAnim['arrIndex'];
+            const leftIndex = curAnim['leftIndex'] + shift;
+            const rightIndex = curAnim['rightIndex'];
+            const rightMax = curAnim['rightMax'];
+            const leftSwap = curAnim['leftSwap'];
+            const final = curAnim['final'];
+            swapTime += speed;
+            timeouts.push(setTimeout( () => {
+                if (leftIndex <= leftMax) {
+                    const leftStyle : any = docBars[leftIndex]
+                    leftStyle.style.backgroundColor = Utils.CUR_COLOR;
+                }
+                if (rightIndex <= rightMax) {
+                    const rightStyle : any = docBars[rightIndex]
+                    rightStyle.style.backgroundColor = Utils.SWAP_COLOR;
+                }
+            }, swapTime));
+            swapTime += speed;
+            timeouts.push(setTimeout( () => {
+                if (leftSwap) {
+                    let tmp : number = arr.splice(leftIndex, 1)[0];
+                    arr.splice(arrIndex, 0, tmp);
+                    // console.log("Left Swap -- Moving: " + tmp + " from index " + leftIndex + " to index " + arrIndex);
+                } else {
+                    if (leftIndex <= leftMax) {
+                        const leftStyle: any = docBars[leftIndex]
+                        leftStyle.style.backgroundColor = Utils.INIT_COLOR;
+                    }
+                    let tmp : number = arr.splice(rightIndex, 1)[0];
+                    arr.splice(arrIndex, 0, tmp);
+                    // console.log("Right Swap -- Moving: " + tmp + " from index " + rightIndex + " to index " + arrIndex);
+                    /*if (leftIndex <= leftMax) {
+                        const leftStyle: any = docBars[leftIndex + 1]
+                        leftStyle.style.backgroundColor = Utils.CUR_COLOR;
+                    }*/
+                }
+                this.setState({
+                    vals: arr
+                })
+            }, swapTime));
+            if (!leftSwap) {
+                // console.log("Incrementing shift");
+                shift++;
+            }
+            swapTime += speed;
+            timeouts.push(setTimeout(() => {
+                if (leftIndex <= leftMax) {
+                    const leftStyle : any = docBars[leftIndex]
+                    leftStyle.style.backgroundColor = Utils.INIT_COLOR;
+                }
+                if (rightIndex <= rightMax) {
+                    const rightStyle : any = docBars[rightIndex]
+                    rightStyle.style.backgroundColor = Utils.INIT_COLOR;
+                }
+                if (final) {
+                    const arrStyle : any = docBars[arrIndex]
+                    arrStyle.style.backgroundColor = Utils.SORTED_COLOR;
+                }
+            }, swapTime))
+        }
+        swapTime += speed;
+        timeouts.push(setTimeout(() => {
+            this.setState({
+                sorting: false
+            })
+        }, swapTime))
+    }
+
+    animateSort = (arr : number[], animations : any[], swapCoef: number) : void => {
+        const docBars = document.getElementsByClassName('Bar');
+        let swapTime = 0.0;
+        const speed = Utils.SPEED_NUMBERS[this.state.speedMS - 1];
         for (let i = 0; i < animations.length; i++) {
             const curAnim = animations[i];
             const cur = curAnim['cur'];
@@ -146,7 +248,7 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
                     }
                 }, swapTime));
                 if (cur !== undefined && swap !== undefined && swapVals) {
-                    swapTime += speed * 4;
+                    swapTime += speed * swapCoef;
                     timeouts.push(setTimeout(() => {
                         SortFunctions.swap(cur, swap, arr);
                         this.setState({
@@ -154,7 +256,7 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
                         })
                     }, swapTime));
                     if (final) {
-                        swapTime += speed / 4;
+                        swapTime += speed;
                         timeouts.push(setTimeout(() => {
                             const finalStyle : any = docBars[cur];
                             finalStyle.style.backgroundColor = Utils.SORTED_COLOR;
@@ -222,13 +324,13 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
                                 <div className="Flex-Col-Right">
                                     <div className="Flex-Col-Center MarginR30">
                                         <ColorKey curSort={this.props.curSort}/>
-                                        <div className="Flex-Col-Center">
-                                            <p className="Slider-Label">Number of Bars {this.state.numBars}</p>
-                                            <Slider xmin={10} xmax={100} xstep={10} x={this.state.numBars} onChange={({x}) => this.handleNumBarSlider(x)}/>
+                                        <div className="Flex-Col-Center FixedW250">
+                                            <p className="Slider-Label">Number of Bars: {this.state.numBars}</p>
+                                            <Slider xmin={10} xmax={200} xstep={10} x={this.state.numBars} onChange={({x}) => this.handleNumBarSlider(x)}/>
                                         </div>
-                                        <div className="Flex-Col-Center">
-                                            <p className="Slider-Label">Animation Speed {this.state.speedMS}</p>
-                                            <Slider xmin={1} xmax={900} x={this.state.speedMS} onChange={({x}) => this.setState({speedMS : x})}/>
+                                        <div className="Flex-Col-Center FixedW250">
+                                            <p className="Slider-Label">Animation Speed: {Utils.SPEEDS[this.state.speedMS - 1]}</p>
+                                            <Slider xmin={1} xmax={7} xstep={1} x={this.state.speedMS} onChange={({x}) => this.setState({speedMS : x})}/>
                                         </div>
                                     </div>
                                 </div>

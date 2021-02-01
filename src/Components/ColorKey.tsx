@@ -10,6 +10,12 @@ interface KeyProps {
 
 class ColorKey extends Component<KeyProps, {}> {
     render() {
+        let redWord = "Current";
+        let blueWord = "Swap";
+        if (this.props.curSort === 2) {
+            redWord = "Left Array";
+            blueWord = "Right Array";
+        }
         let hilight = Utils.HILIGHTS[this.props.curSort];
         let hilightKey : any;
         if (hilight.length > 0) {
@@ -33,11 +39,11 @@ class ColorKey extends Component<KeyProps, {}> {
                     <div className="Key-Rect" style={{backgroundColor: Utils.SORTED_COLOR}}/>
                 </div>
                 <div className="Key-Pairs">
-                    <p className="Key-Label"> Current </p>
+                    <p className="Key-Label"> {redWord} </p>
                     <div className="Key-Rect" style={{backgroundColor: Utils.CUR_COLOR}}/>
                 </div>
                 <div className="Key-Pairs">
-                    <p className="Key-Label"> Swap </p>
+                    <p className="Key-Label"> {blueWord} </p>
                     <div className="Key-Rect" style={{backgroundColor: Utils.SWAP_COLOR}}/>
                 </div>
                 {hilightKey}
