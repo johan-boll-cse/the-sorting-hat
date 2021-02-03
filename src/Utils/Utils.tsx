@@ -1,5 +1,6 @@
 export const SORTS : String[] = ["Selection", "Bubble", "Merge", "Quick"];
 export const HILIGHTS : String[] = ["Current Index", "No Swap", "", "Pivot"];
+// The SPEEDS related to the SPEED_NUMBERS below
 export const SPEEDS : String[] = ["Slowest", "Slower", "Slow", "Normal", "Fast", "Faster", "Fastest"];
 export const SPEED_NUMBERS : number[] = [2000, 500, 100, 50, 20, 5, 1];
 export const INIT_COLOR = 'rgb(179,149,0)';    // Dark gold
@@ -12,7 +13,8 @@ export const MAX_VAL = 99;
 export const MIN_VAL = 10;
 export const DEFAULT_NUM_BARS = 40;
 export const DEFAULT_SPEED = 4;
-// Runtime, Space, Stable, Difficulty
+// Runtime -- In HTML to allow for superscripts
+// Space, Stable, Difficulty as strings associated to their colors
 export const PROPERTIES_RUNTIME : any[] = [
     <div className="Flex-Row-Center">
         <div className="Flex-Col-Center">
