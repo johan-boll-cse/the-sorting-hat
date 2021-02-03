@@ -11,9 +11,6 @@ interface AppState {
 
 }
 
-// The sorting algorithms in their respective indices
-// const SORTS : String[] = ["Selection", "Bubble", "Merge", "Quick"];
-
 class App extends Component<{}, AppState> {
     constructor(props: any) {
         super(props);

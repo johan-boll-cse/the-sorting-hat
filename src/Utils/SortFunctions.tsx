@@ -74,11 +74,34 @@ export function bubbleSort(vals: number[]) : any[] {
 
 export function quickSort(vals: number[]) : any[] {
     let array = vals.slice();
-    console.log(array);
     let animations : any[] = [];
-
+    sort(array, 0, array.length - 1, animations);
     return animations;
 
+}
+
+function partition(array : number[], lo : number, hi : number, animations : any[]) : number {
+    let pivot = array[hi];
+    let i = lo;
+    for(let j = lo; j < hi; j++) {
+        animations.push({cur: j, swap: i, highlight: hi, switch : false, final: false})
+        if (array[j] < pivot) {
+            swap(i, j, array);
+            animations.push({cur: j, swap: i, highlight: hi, switch : true, final: false})
+            i++;
+        }
+    }
+    swap(i, hi, array);
+    animations.push({cur: hi, swap: i, highlight: hi, switch : true, final: false})
+    return i;
+}
+
+function sort(array : number[], lo : number, hi : number, animations : any[]) {
+    if (lo < hi) {
+        let index = partition(array, lo, hi ,animations);
+        sort(array, lo, index - 1, animations);
+        sort(array, index + 1, hi, animations);
+    }
 }
 
 /**

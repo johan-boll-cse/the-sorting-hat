@@ -61,13 +61,13 @@ export const PROPERTIES_RUNTIME : any[] = [
             <p className = "Top-Label">Worst</p>
             <p className = "Sup Bottom-Label Red">O(n<sup>2</sup>)</p>
         </div>
-        <div className="Flex-Col-Center MarginL30">
+        <div className="Flex-Col-Center MarginL15">
             <p className = "Top-Label">Average</p>
             <p className = "Normal Bottom-Label Yellow">O(nlog(n))</p>
         </div>
-        <div className="Flex-Col-Center MarginL30">
+        <div className="Flex-Col-Center MarginL15">
             <p className = "Top-Label">Best</p>
-            <p className = "Normal Bottom-Label Green">O(n)</p>
+            <p className = "Normal Bottom-Label Yellow">O(nlog(n))</p>
         </div>
     </div>]
 export const PROPERTIES_SPACE : String[] = ["O(1)", "O(1)", "O(n)", "O(1)"]
