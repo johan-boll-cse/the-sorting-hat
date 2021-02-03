@@ -127,13 +127,9 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
         });
     }
 
-    // TODO: Make the left and right array colors move over after the array shifts
-
     animateSortMerge = (arr : number[], animations : any[]) : void => {
         const docBars = document.getElementsByClassName('Bar');
         let swapTime = 0.0;
-        // console.log(animations);
-        // console.log(arr);
         let shift = 0;
         let pastLeftMax = 0;
         const speed = Utils.SPEED_NUMBERS[this.state.speedMS - 1];
@@ -141,7 +137,6 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
             const curAnim = animations[i];
             const firstLeftMax = curAnim['leftMax'];
             if (pastLeftMax !== firstLeftMax) {
-                // console.log("Reseting shift");
                 shift = 0;
                 pastLeftMax = firstLeftMax;
             }
@@ -168,43 +163,47 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
                 if (leftSwap) {
                     let tmp : number = arr.splice(leftIndex, 1)[0];
                     arr.splice(arrIndex, 0, tmp);
-                    // console.log("Left Swap -- Moving: " + tmp + " from index " + leftIndex + " to index " + arrIndex);
                 } else {
                     if (leftIndex <= leftMax) {
                         const leftStyle: any = docBars[leftIndex]
                         leftStyle.style.backgroundColor = Utils.INIT_COLOR;
+                        const nextleftStyle: any = docBars[leftIndex + 1]
+                        nextleftStyle.style.backgroundColor = Utils.CUR_COLOR;
+                    }
+                    if (rightIndex <= rightMax && rightIndex !== leftIndex + 1) {
+                        const rightStyle: any = docBars[rightIndex]
+                        rightStyle.style.backgroundColor = Utils.INIT_COLOR;
+                    }
+                    if (rightIndex + 1 <= rightMax) {
+                        const rightStyle: any = docBars[rightIndex + 1]
+                        rightStyle.style.backgroundColor = Utils.SWAP_COLOR;
                     }
                     let tmp : number = arr.splice(rightIndex, 1)[0];
                     arr.splice(arrIndex, 0, tmp);
-                    // console.log("Right Swap -- Moving: " + tmp + " from index " + rightIndex + " to index " + arrIndex);
-                    /*if (leftIndex <= leftMax) {
-                        const leftStyle: any = docBars[leftIndex + 1]
-                        leftStyle.style.backgroundColor = Utils.CUR_COLOR;
-                    }*/
                 }
                 this.setState({
                     vals: arr
                 })
             }, swapTime));
+            const leftresetShift = leftSwap ? 0 : 1;
+            const rightresetShift = (leftSwap || rightIndex + 1 > rightMax) ? 0 : 1;
             if (!leftSwap) {
-                // console.log("Incrementing shift");
                 shift++;
             }
-            swapTime += speed;
             timeouts.push(setTimeout(() => {
                 if (leftIndex <= leftMax) {
-                    const leftStyle : any = docBars[leftIndex]
+                    const leftStyle : any = docBars[leftIndex + leftresetShift]
                     leftStyle.style.backgroundColor = Utils.INIT_COLOR;
                 }
                 if (rightIndex <= rightMax) {
-                    const rightStyle : any = docBars[rightIndex]
+                    const rightStyle : any = docBars[rightIndex + rightresetShift]
                     rightStyle.style.backgroundColor = Utils.INIT_COLOR;
                 }
                 if (final) {
                     const arrStyle : any = docBars[arrIndex]
                     arrStyle.style.backgroundColor = Utils.SORTED_COLOR;
                 }
-            }, swapTime))
+            }, swapTime + speed))
         }
         swapTime += speed;
         timeouts.push(setTimeout(() => {

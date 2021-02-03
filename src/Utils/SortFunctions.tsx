@@ -101,6 +101,16 @@ function sort(array : number[], lo : number, hi : number, animations : any[]) {
         let index = partition(array, lo, hi ,animations);
         sort(array, lo, index - 1, animations);
         sort(array, index + 1, hi, animations);
+    } else {
+        if (hi >= 0 && hi < array.length) {
+            animations.push({cur: hi, swap: undefined, highlight: undefined, switch : false, final: true})
+        }
+        if (lo < array.length && lo !== hi) {
+            animations.push({cur: lo, swap: undefined, highlight: undefined, switch : false, final: true})
+        }
+        if (lo + 1 < array.length) {
+            animations.push({cur: lo + 1, swap: undefined, highlight: undefined, switch : false, final: true})
+        }
     }
 }
 
