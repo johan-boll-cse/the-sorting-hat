@@ -21,7 +21,10 @@ interface DisplayState {
     vals: number[],
     numBars: number,
     speedMS: number,
-    sorting: boolean
+    sorting: boolean,
+    reads: number,
+    writes: number,
+    storage: number
 }
 
 const timeouts : any[] = [];
@@ -34,7 +37,10 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
             vals: this.generateVals(Utils.DEFAULT_NUM_BARS),
             numBars: Utils.DEFAULT_NUM_BARS,
             speedMS: Utils.DEFAULT_SPEED,
-            sorting: false
+            sorting: false,
+            reads: 0,
+            writes: 0,
+            storage: 0
         }
     }
 
@@ -55,7 +61,10 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
 
     clearTimeouts = () => {
         this.setState({
-            sorting: false
+            sorting: false,
+            reads: 0,
+            writes: 0,
+            storage: 0
         })
         for (let i = 0; i < timeouts.length; i++) {
             clearTimeout(timeouts[i]);
@@ -93,41 +102,43 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
     }
 
     sortArray = () : void => {
-        let animations : any[] = [];
+        let results : any;
         let swapCoef : number = 1;
         this.clearTimeouts();
         let arr = this.state.vals.slice();
         if (this.props.curSort === 0) {
-            animations = SortFunctions.selectionSort(arr);
+            results = SortFunctions.selectionSort(arr);
             swapCoef = 5;
         } else if (this.props.curSort === 1) {
-            animations = SortFunctions.bubbleSort(arr);
+            results = SortFunctions.bubbleSort(arr);
         } else if (this.props.curSort === 2) {
-            animations = SortFunctions.mergeSort(arr);
+            results = SortFunctions.mergeSort(arr);
             this.resetBarColor();
-            this.animateSortMerge(arr, animations);
+            this.animateSortMerge(arr, results);
             this.setState({
                 vals: arr,
                 sorting: true
             });
             return;
         } else if (this.props.curSort === 3) {
-            animations = SortFunctions.quickSort(arr);
+            results = SortFunctions.quickSort(arr);
         }
         this.resetBarColor();
-        if (animations.length === 0) {
-            console.log("No Animations");
-            arr.sort();
-        } else {
-            this.animateSort(arr, animations, swapCoef);
-        }
+        this.animateSort(arr, results, swapCoef);
         this.setState({
             vals: arr,
             sorting: true
         });
     }
 
-    animateSortMerge = (arr : number[], animations : any[]) : void => {
+    animateSortMerge = (arr : number[], results : any) : void => {
+        const animations = results['animations'];
+        const counts = results['counts'];
+        if (animations.length !== counts.length) {
+            console.log("Size mismatch: Animations size", animations.length, "Counts size", counts.length);
+            this.clearTimeouts();
+            return;
+        }
         const docBars = document.getElementsByClassName('Bar');
         let swapTime = 0.0;
         let shift = 0;
@@ -135,6 +146,7 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
         const speed = Utils.SPEED_NUMBERS[this.state.speedMS - 1];
         for (let i = 0; i < animations.length; i++) {
             const curAnim = animations[i];
+            const curCount = counts[i];
             const firstLeftMax = curAnim['leftMax'];
             if (pastLeftMax !== firstLeftMax) {
                 shift = 0;
@@ -148,6 +160,17 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
             const leftSwap = curAnim['leftSwap'];
             const final = curAnim['final'];
             swapTime += speed;
+            // Fastest speed has visibility problems because it is faster than rendering speed
+            // So we only render counts every 5 on fastest speed
+            if (this.state.speedMS !== 7 || i % 5 === 0) {
+                timeouts.push(setTimeout(() => {
+                    this.setState( {
+                        reads: curCount['reads'],
+                        writes: curCount['writes'],
+                        storage: curCount['storage']
+                    })
+                }, swapTime))
+            }
             timeouts.push(setTimeout( () => {
                 if (leftIndex <= leftMax) {
                     const leftStyle : any = docBars[leftIndex]
@@ -210,15 +233,23 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
             this.setState({
                 sorting: false
             })
-        }, swapTime))
+        }, swapTime));
     }
 
-    animateSort = (arr : number[], animations : any[], swapCoef: number) : void => {
+    animateSort = (arr : number[], results : any, swapCoef: number) : void => {
+        const animations = results['animations'];
+        const counts = results['counts'];
+        if (animations.length !== counts.length) {
+            console.log("Size mismatch: Animations size", animations.length, "Counts size", counts.length);
+            this.clearTimeouts();
+            return;
+        }
         const docBars = document.getElementsByClassName('Bar');
         let swapTime = 0.0;
         const speed = Utils.SPEED_NUMBERS[this.state.speedMS - 1];
         for (let i = 0; i < animations.length; i++) {
             const curAnim = animations[i];
+            const curCount = counts[i];
             const cur = curAnim['cur'];
             const swap = curAnim['swap'];
             const highlight = curAnim['highlight'];
@@ -226,6 +257,16 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
             const final = curAnim['final'];
             const noChange = cur !== undefined && swap === undefined && highlight === undefined && final;
             swapTime += speed;
+            // Fastest speed has visibility problems because it is faster than rendering speed
+            // So we only render counts every 5 on fastest speed
+            if (this.state.speedMS !== 7 || i % 5 === 0) {
+                timeouts.push(setTimeout(() => {
+                    this.setState( {
+                        reads: curCount['reads'],
+                        writes: curCount['writes']
+                    })
+                }, swapTime))
+            }
             if (noChange) {
                 timeouts.push(setTimeout(() => {
                     const finalStyle : any = docBars[cur];
@@ -333,6 +374,17 @@ class SortDisplay extends Component<DisplayProps, DisplayState> {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div className="Flex-Row-Center">
+                            <div className="FixedW250">
+                                <p className="Slider-Label"> Array Reads: {this.state.reads}</p>
+                            </div>
+                            <div className="FixedW250">
+                            <p className="Slider-Label">Array Writes: {this.state.writes}</p>
+                            </div>
+                            <div className="FixedW250">
+                                <p className="Slider-Label">Additional Storage: {this.state.storage}</p>
                             </div>
                         </div>
                     </div>
